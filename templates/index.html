@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Naval Ship Detection</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+
+  <body>
+    <div class="site">
+      <!-- Header -->
+      <header class="header">
+        <div class="brand">
+          <div class="logo"></div>
+          <div>
+            <div class="title">Naval Ship Detection</div>
+            <div class="subtitle">YOLOv8 + Azure OpenAI Intelligence</div>
+          </div>
+        </div>
+
+        <div class="status">
+          <div class="badge">MODEL ACTIVE</div>
+          <div class="badge">REGION: NORTH ATLANTIC</div>
+        </div>
+      </header>
+
+      <!-- Main Grid -->
+      <div class="grid">
+        <!-- Upload Card -->
+        <div class="card">
+          <h1>Upload Naval Image</h1>
+          <p class="lead">Detect vessels and analyze maritime intelligence</p>
+
+          <form method="POST" enctype="multipart/form-data">
+            <div class="upload-box">
+              <span>
+                Select naval satellite or drone imagery<br />
+                (JPG, PNG)
+              </span>
+            </div>
+
+            <div class="actions">
+              <label class="file-label">
+                Upload Image
+                <input class="file-input" type="file" name="image" required />
+              </label>
+
+              <button class="btn">Run Detection</button>
+            </div>
+          </form>
+
+          {% if image_url %}
+          <div class="result">
+            <img src="{{ image_url }}" />
+          </div>
+          {% endif %}
+        </div>
+
+        <!-- AI Assistant -->
+        <div class="card">
+          <h1>AI Assistant</h1>
+          <p class="lead">Classification and maritime intelligence</p>
+
+          <div id="chat-box" class="chat-box">
+            <p>
+              <b>System:</b> Initialized. Awaiting maritime imagery for
+              analysis.
+            </p>
+          </div>
+
+          <div class="chat-input-row">
+            <input
+              id="chat-input"
+              placeholder="Ask about detected ship, classification..."
+            />
+            <button class="btn" onclick="sendMessage()">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function sendMessage() {
+        const input = document.getElementById("chat-input");
+        const box = document.getElementById("chat-box");
+        const msg = input.value.trim();
+        if (!msg) return;
+
+        box.innerHTML += `<p><b>You:</b> ${msg}</p>`;
+        input.value = "";
+
+        fetch("/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: msg }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            box.innerHTML += `<p><b>AI:</b> ${data.reply}</p>`;
+            box.scrollTop = box.scrollHeight;
+          });
+      }
+    </script>
+  </body>
+</html>

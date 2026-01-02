@@ -1,0 +1,16 @@
+# Virtual environment
+venv/
+.env
+
+# Python cache
+__pycache__/
+*.pyc
+
+# YOLO / ML outputs
+runs/
+weights/
+*.pt
+
+# VS Code & OS
+.vscode/
+.DS_Store
